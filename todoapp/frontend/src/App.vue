@@ -1,24 +1,27 @@
 <script lang="ts" setup>
 import HelloWorld from './components/HelloWorld.vue'
-import CreateTask from "./components/CreateTask.vue";</script>
+import CreateTask from "./components/CreateTask.vue";
+import {GetUsername, SetUsername} from '../wailsjs/go/main/App';
+import {onMounted, ref} from "vue";
+
+const username = ref<string | null>(null)
+
+const loadUsername = async () => {
+  username.value = await GetUsername();
+}
+
+onMounted(() => {
+  loadUsername()
+})
+
+</script>
+
 
 <template>
-  <img id="logo" alt="Wails logo" src="./assets/images/logo.png"/>
-
-  <HelloWorld/>
-  <CreateTask/>
+  <HelloWorld v-if="!username" @usernameSet="loadUsername"/>
+  <CreateTask v-else :username="username"/>
 </template>
 
 <style>
-#logo {
-  display: block;
-  max-width: 50vh;
-  max-height: 50vh;
-  margin: auto;
-  padding: 10% 0 0;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  background-origin: content-box;
-}
+
 </style>

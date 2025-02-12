@@ -8,9 +8,10 @@ import (
 )
 
 type Task struct {
-	ID     int    `json:"id"`
-	Text   string `json:"text"`
-	Status string `json:"status"`
+	ID       int            `json:"id"`
+	Text     string         `json:"text"`
+	Status   string         `json:"status"`
+	Deadline sql.NullString `json:"deadline"`
 }
 
 var db *sql.DB
@@ -35,7 +36,8 @@ func initDB() {
 		`CREATE TABLE IF NOT EXISTS tasks (
 	 			id INTEGER PRIMARY KEY,
 				text TEXT NOT NULL,
-				status TEXT CHECK(status IN ('todo', 'in_progress', 'done')) NOT NULL DEFAULT 'todo'
+				status TEXT CHECK(status IN ('todo', 'in_progress', 'done')) NOT NULL DEFAULT 'todo',
+                deadline TEXT          
 	);`)
 	if err != nil {
 		log.Fatal(err)
@@ -44,15 +46,15 @@ func initDB() {
 	fmt.Println("База данных инициализирована")
 }
 
-func AddTask(text string) {
-	_, err := db.Exec("INSERT INTO tasks (text, status) VALUES(?, 'todo')", text)
+func AddTask(text string, deadline *string) {
+	_, err := db.Exec("INSERT INTO tasks (text, status, deadline) VALUES(?, 'todo', ?)", text, deadline)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 func GetTasks() []Task {
-	rows, err := db.Query("SELECT id, text, status FROM tasks")
+	rows, err := db.Query("SELECT * FROM tasks")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -61,7 +63,7 @@ func GetTasks() []Task {
 	var tasks []Task
 	for rows.Next() {
 		var task Task
-		rows.Scan(&task.ID, &task.Text, &task.Status)
+		rows.Scan(&task.ID, &task.Text, &task.Status, &task.Deadline)
 		tasks = append(tasks, task)
 	}
 
@@ -86,7 +88,12 @@ func GetUsername() (string, error) {
 
 func SetUsername(username string) error {
 	_, err := db.Exec(`
-		INSERT INTO users VALUES(id, username) VALUES (1, ?)
-		ON CONFLICT(id) DO UPDATE SET username = ?`, username, username)
+		INSERT INTO users (id, username) VALUES (1, ?)
+		ON CONFLICT(id) DO UPDATE SET username = EXCLUDED.username`, username)
+	return err
+}
+
+func UpdateTaskStatus(id int, status string) error {
+	_, err := db.Exec(`UPDATE tasks SET status = ? WHERE id = ?`, status, id)
 	return err
 }

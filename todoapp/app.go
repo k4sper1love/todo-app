@@ -46,8 +46,8 @@ func (a *App) Greet(name string) string {
 	return msg.String()
 }
 
-func (a *App) AddTask(text string) {
-	AddTask(text)
+func (a *App) AddTask(text string, deadline *string) {
+	AddTask(text, deadline)
 }
 
 func (a *App) GetTasks() []Task {
@@ -64,4 +64,8 @@ func (a *App) GetUsername() (string, error) {
 
 func (a *App) SetUsername(username string) error {
 	return SetUsername(username)
+}
+
+func (a *App) UpdateTaskStatus(id int, status string) error {
+	return UpdateTaskStatus(id, status)
 }
