@@ -72,7 +72,7 @@ func GetTasks() []Task {
 	return tasks
 }
 
-func RemoveTask(id int) {
+func DeleteTask(id int) {
 	_, err := db.Exec("DELETE FROM tasks WHERE id = ?", id)
 	if err != nil {
 		log.Fatal(err)

@@ -4,13 +4,13 @@ import {main} from '../models';
 
 export function AddTask(arg1:string,arg2:any,arg3:boolean):Promise<void>;
 
+export function DeleteTask(arg1:number):Promise<void>;
+
 export function GetTasks():Promise<Array<main.Task>>;
 
 export function GetUsername():Promise<string>;
 
 export function Greet(arg1:string):Promise<string>;
-
-export function RemoveTask(arg1:number):Promise<void>;
 
 export function SetUsername(arg1:string):Promise<void>;
 

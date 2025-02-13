@@ -54,8 +54,8 @@ func (a *App) GetTasks() []Task {
 	return GetTasks()
 }
 
-func (a *App) RemoveTask(id int) {
-	RemoveTask(id)
+func (a *App) DeleteTask(id int) {
+	DeleteTask(id)
 }
 
 func (a *App) GetUsername() (string, error) {
