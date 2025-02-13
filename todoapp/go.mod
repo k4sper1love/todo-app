@@ -6,7 +6,7 @@ toolchain go1.23.5
 
 require (
 	github.com/wailsapp/wails/v2 v2.9.3
-	modernc.org/sqlite v1.34.5
+	modernc.org/sqlite v1.35.0
 )
 
 require (

@@ -5,16 +5,22 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"todoapp/repository"
 )
 
 // App struct
 type App struct {
-	ctx context.Context
+	ctx      context.Context
+	taskRepo repository.TaskRepository
+	userRepo repository.UserRepository
 }
 
 // NewApp creates a new App application struct
-func NewApp() *App {
-	return &App{}
+func NewApp(taskRepo repository.TaskRepository, userRepo repository.UserRepository) *App {
+	return &App{
+		taskRepo: taskRepo,
+		userRepo: userRepo,
+	}
 }
 
 // startup is called when the app starts. The context is saved
@@ -29,47 +35,44 @@ func (a *App) Greet(name string) string {
 	currentHour := time.Now().Hour()
 
 	switch {
-	case currentHour < 6 || currentHour > 21:
-		msg.WriteString("🌙 Доброй ночи")
-	case currentHour < 12:
+	case currentHour >= 6 && currentHour < 12:
 		msg.WriteString("☀️ Доброе утро")
-	case currentHour < 18:
+	case currentHour >= 12 && currentHour < 18:
 		msg.WriteString("🌤️ Добрый день")
-	case currentHour < 21:
+	case currentHour >= 18 && currentHour < 21:
 		msg.WriteString("🌆 Добрый вечер")
-	default:
-		msg.WriteString("😊 Доброго времени суток")
+	default: // Остальное — это ночь
+		msg.WriteString("🌙 Доброй ночи")
 	}
 
 	msg.WriteString(fmt.Sprintf(", %s!", name))
-
 	return msg.String()
 }
 
-func (a *App) AddTask(text string, deadline *string, hasPriority bool) {
-	AddTask(text, deadline, hasPriority)
+func (a *App) AddTask(text string, deadline *string, hasPriority bool) error {
+	return a.taskRepo.AddTask(text, deadline, hasPriority)
 }
 
-func (a *App) GetTasks() []Task {
-	return GetTasks()
+func (a *App) GetTasks() ([]repository.Task, error) {
+	return a.taskRepo.GetTasks()
 }
 
-func (a *App) DeleteTask(id int) {
-	DeleteTask(id)
-}
-
-func (a *App) GetUsername() (string, error) {
-	return GetUsername()
-}
-
-func (a *App) SetUsername(username string) error {
-	return SetUsername(username)
+func (a *App) DeleteTask(id int) error {
+	return a.taskRepo.DeleteTask(id)
 }
 
 func (a *App) UpdateTaskStatus(id int, status string) error {
-	return UpdateTaskStatus(id, status)
+	return a.taskRepo.UpdateTaskStatus(id, status)
 }
 
 func (a *App) UpdateTaskPriority(id int, hasPriority bool) error {
-	return UpdateTaskPriority(id, hasPriority)
+	return a.taskRepo.UpdateTaskPriority(id, hasPriority)
+}
+
+func (a *App) GetUsername() (string, error) {
+	return a.userRepo.GetUsername()
+}
+
+func (a *App) SetUsername(username string) error {
+	return a.userRepo.SetUsername(username)
 }
