@@ -1,17 +1,16 @@
 <script lang="ts" setup>
 import {reactive, ref} from 'vue'
-import {Greet, SetUsername} from '../../wailsjs/go/main/App'
+import {setUsername} from "../repositories/user";
 
 const username = ref('');
 const emit = defineEmits(['usernameSet'])
 
 const saveUsername = async () => {
   if (username.value.trim() !== '') {
-    await SetUsername(username.value)
+    await setUsername(username.value)
     emit('usernameSet')
   }
 }
-
 </script>
 
 <template>
