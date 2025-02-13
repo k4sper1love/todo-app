@@ -15,11 +15,19 @@ const saveUsername = async () => {
 
 <template>
   <main>
-    <img id="logo" alt="ToDo logo" src="../assets/images/logo.png"/>
-    <div id="result" class="result">Давайте знакомиться! Введите свое имя 👇</div>
-    <div id="input" class="input-box">
-      <input id="name" v-model="username" autocomplete="off" class="input" type="text"/>
-      <button class="btn" @click="saveUsername">Сохранить</button>
+    <div>
+      <img id="logo" alt="ToDo logo" src="../assets/images/logo.png"/>
+      <p>
+        Привет! Я
+        <a href="https://github.com/k4sper1love/todo-app" target="_blank" rel="noopener noreferrer"><span>TodoApp</span></a>
+        by @k4sper1love
+      </p>
+    </div>
+    <div id="result" class="result">А как вас зовут? 😊</div>
+    <div id="input" class="input-group justify-content-center">
+      <span class="input-group-text"><i class="fas fa-user">⌨️</i></span>
+      <input id="name" v-model="username" autocomplete="off" class="input form-control-sm" type="text" placeholder="Введите свое имя"/>
+      <button class="btn  btn-outline-primary"  type="button"  @click="saveUsername">Это я</button>
     </div>
   </main>
 </template>
@@ -35,48 +43,5 @@ const saveUsername = async () => {
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-origin: content-box;
-}
-
-.result {
-  height: 20px;
-  line-height: 20px;
-  margin: 1.5rem auto;
-}
-
-.input-box .btn {
-  width: 60px;
-  height: 30px;
-  line-height: 30px;
-  border-radius: 3px;
-  border: none;
-  margin: 0 0 0 20px;
-  padding: 0 8px;
-  cursor: pointer;
-}
-
-.input-box .btn:hover {
-  background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
-  color: #333333;
-}
-
-.input-box .input {
-  border: none;
-  border-radius: 3px;
-  outline: none;
-  height: 30px;
-  line-height: 30px;
-  padding: 0 10px;
-  background-color: rgba(240, 240, 240, 1);
-  -webkit-font-smoothing: antialiased;
-}
-
-.input-box .input:hover {
-  border: none;
-  background-color: rgba(255, 255, 255, 1);
-}
-
-.input-box .input:focus {
-  border: none;
-  background-color: rgba(255, 255, 255, 1);
 }
 </style>

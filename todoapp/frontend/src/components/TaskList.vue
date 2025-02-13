@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {Task, TaskStatusEnum} from "../types/task";
 import {deleteTask, updateTaskPriority, updateTaskStatus} from "../repositories/task";
-import {ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 
 const props = defineProps<{ tasks: Task[] }>();
 const emit = defineEmits(["loadTasks"])
@@ -38,81 +38,118 @@ const openModal = (id: number) => {
   showModal.value = true
 }
 
+const isDeadlineExpired = (deadline: string) => {
+  if (!deadline) return false;
+  const now = new Date();
+  const deadlineDate = new Date(deadline);
+  return deadlineDate < now;
+};
+
+const formatDeadline = (deadline: string): string => {
+  const date = new Date(deadline);
+  return date.toLocaleString("ru-RU", {
+    day: "numeric",
+    month: "short",
+    year: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
 </script>
 
 <template>
-  <div>
-    <ul>
-      <li v-for="task in tasks" :key="task.id" :class="{ priority: task.hasPriority }">
-        <span :class="['pointer', { done: task.status === 'done' }]" @click="toggleTaskStatus(task)">
-          {{ task.text }} <span v-if="task.deadline">({{ task.deadline }})</span>
-        </span>
-        <span class="star-icon" role="button" @click="toggleTaskPriority(task)"> {{ task.hasPriority ? '★' : '☆' }}</span>
-        <span class="trash-icon" role="button" @click="openModal(task.id)">❌</span>
+  <ul class="list-unstyled ">
+    <li v-for="task in tasks" :key="task.id" :class="{ priority: task.hasPriority }">
+      <!-- Карточка для каждой задачи -->
+      <div class="card mb-3 w-50 justify-content-center mx-auto custom-card">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <!-- Звездочка и текст задачи -->
+          <div class="d-flex align-items-center">
+            <span class="star-icon me-3" role="button" @click="toggleTaskPriority(task)">
+              {{ task.hasPriority ? '★' : '☆' }}
+            </span>
+            <span :class="['pointer', { done: task.status === 'done' }]" @click="toggleTaskStatus(task)">
+              {{ task.text }}
+            </span>
+          </div>
 
-        <div v-if="showModal" class="modal">
-          <div class="modal-content">
-            <p>Вы уверены, что хотите удалить эту задачу?</p>
-            <button @click="confirmDelete">Удалить</button>
-            <button @click="showModal = false">Отмена</button>
+          <div class="d-flex align-items-center">
+            <span v-if="task.deadline" :class="['deadline', { expired: isDeadlineExpired(task.deadline) }]">
+              {{ formatDeadline(task.deadline) }}
+            </span>
+            <span class="trash-icon ms-3" role="button" @click="openModal(task.id)">
+              ✖️
+            </span>
           </div>
         </div>
-      </li>
-    </ul>
-  </div>
+      </div>
+
+      <div v-if="showModal && taskToDelete === task.id" class="modal">
+        <div class="modal-content">
+          <p>Вы уверены, что хотите удалить задачу "{{ task.text }}"?</p>
+          <button class="btn btn-outline-danger mb-2" @click="confirmDelete">Удалить</button>
+          <button class="btn btn-outline-primary" @click="showModal = false">Отмена</button>
+        </div>
+      </div>
+    </li>
+  </ul>
 </template>
 
+
 <style scoped>
+.deadline {
+  font-size: 0.9em;
+  color: #888;
+  margin-left: 5px;
+}
+
+.deadline.expired {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.custom-card {
+  background-color: #1e1e1e;
+  color: var(--text-color);
+  border: 1px solid #333333;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.custom-card:hover {
+  box-shadow: 0 0 5px rgba(187, 134, 252, 0.5);
+  outline: none;
+}
+
 .modal {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.4);
-  width: 100vw;
-  height: 100vh;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
 
 .modal-content {
-  background: white;
+  background-color: #1e1e1e;
   padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   width: 300px;
+  text-align: center;
 }
 
 .modal-content p {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   font-size: 16px;
-  color: black;
-}
-
-.modal-content button {
-  margin: 5px;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.modal-content button:first-of-type {
-  background: #e63946;
   color: white;
 }
 
-.modal-content button:last-of-type {
-  background: #ccc;
-  color: black;
-}
-
-.modal-content button:hover {
-  opacity: 0.8;
-}
 
 .pointer {
   cursor: pointer;
@@ -122,11 +159,6 @@ const openModal = (id: number) => {
   text-decoration: line-through;
   color: gray;
   font-weight: normal;
-}
-
-.priority {
-  font-weight: bold;
-  color: red;
 }
 
 .trash-icon {

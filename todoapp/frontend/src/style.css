@@ -1,12 +1,24 @@
-html {
-    background-color: rgba(47, 128, 237, 0);
-    text-align: center;
-    color: white;
+:root {
+    --primary-color: #bb86fc;
+    --secondary-color: #c7a4ff;
+    --danger-color: #cf6679;
+    --text-color: #c0c0c0;
+    --secondary-text-color: #a0a0a0;
+    --background-color: #121212;
+    --border-color: #333333;
 }
 
-body {
+
+html {
+    background: linear-gradient(135deg, #121212, #1e1e1e);
+    text-align: center;
+    color:  var(--text-color);
+}
+
+html body {
+    background: inherit;
     margin: 0;
-    color: white;
+    color: inherit;
     font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
     "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -21,6 +33,110 @@ body {
 }
 
 #app {
-    height: 100vh;
+    min-height: 100vh;
     text-align: center;
+    overflow: auto;
+}
+
+body h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: 0.5em;
+}
+
+body h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+body h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+}
+
+body h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+body .btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+body .btn-outline-primary:hover {
+    background-color: rgba(187, 134, 252, 0.2);
+    color:var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+body .btn-outline-primary:active {
+    background-color: rgba(187, 134, 252, 0.4);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: scale(0.98);
+}
+
+body .btn-outline-danger {
+    color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
+body .btn-outline-danger:hover {
+    background-color: rgba(207, 102, 121, 0.2);
+    color: var(--danger-color);
+}
+
+body .btn-outline-success {
+    color: #03dac6;
+    border-color: #03dac6;
+}
+
+body .btn-outline-success:hover {
+    background-color: rgba(3, 218, 198, 0.2);
+    color: #03dac6;
+}
+
+body .btn-outline-warning {
+    color: #ffab40;
+    border-color: #ffab40;
+}
+
+body .btn-outline-warning:hover {
+    background-color: rgba(255, 171, 64, 0.2);
+    color: #ffab40;
+}
+
+body input {
+    background-color: #1e1e1e;
+    color: var(--text-color);
+    border: 1px solid #333333;
+    border-radius: 5px;
+    padding: 0 10px;
+    transition: all 0.3s ease;
+}
+
+body input:focus {
+    box-shadow: 0 0 5px rgba(187, 134, 252, 0.5);
+    outline: none;
+}
+
+body .input-group-text {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border: 1px solid #333333;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+body a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+body a:hover {
+    color:  #d0a7ff;
+    text-decoration: underline;
+    transform: scale(1.05);
 }
