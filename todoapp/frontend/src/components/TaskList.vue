@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import {DeleteTask, GetTasks, UpdateTaskPriority, UpdateTaskStatus} from "../../wailsjs/go/main/App";
-import {onMounted, ref} from "vue";
-import {Task} from "../types/task";
+import {Task, TaskStatusEnum} from "../types/task";
 import {deleteTask, updateTaskPriority, updateTaskStatus} from "../repositories/task";
+import {ref} from "vue";
 
 const props = defineProps<{ tasks: Task[] }>();
 const emit = defineEmits(["loadTasks"])
@@ -12,7 +11,7 @@ const taskToDelete = ref<number | null>(null)
 
 
 const toggleTaskStatus = async (task: Task) => {
-  const newStatus = task.status === "todo" ? "done" : "todo";
+  const newStatus = task.status === TaskStatusEnum.TODO ? TaskStatusEnum.DONE : TaskStatusEnum.TODO;
   await updateTaskStatus(task.id, newStatus);
   emit("loadTasks")
 };
@@ -44,7 +43,7 @@ const openModal = (id: number) => {
 <template>
   <div>
     <ul>
-      <li v-for="(task, index) in tasks" :key="task.id" :class="{ priority: task.hasPriority }">
+      <li v-for="task in tasks" :key="task.id" :class="{ priority: task.hasPriority }">
         <span :class="['pointer', { done: task.status === 'done' }]" @click="toggleTaskStatus(task)">
           {{ task.text }} <span v-if="task.deadline">({{ task.deadline }})</span>
         </span>

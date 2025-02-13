@@ -1,15 +1,15 @@
-export interface Task{
+export const TaskStatusEnum = {
+    TODO: "todo",
+    IN_PROGRESS: "in_progress",
+    DONE: "done",
+} as const;
+
+export type TaskStatus = (typeof TaskStatusEnum)[keyof typeof TaskStatusEnum]
+
+export interface Task {
     id: number;
     text: string;
-    status: "todo" | "in_progress" | "done";
+    status: TaskStatus;
     deadline?: string;
-    hasPriority: boolean,
+    hasPriority: boolean;
 }
-
-export const createEmptyTask = (): Task => ({
-    id: -1,
-    text: "",
-    status: "todo",
-    deadline: undefined,
-    hasPriority: false,
-});

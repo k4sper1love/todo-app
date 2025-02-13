@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {reactive, ref} from 'vue'
+import {ref} from 'vue'
 import {setUsername} from "../repositories/user";
 
 const username = ref('');

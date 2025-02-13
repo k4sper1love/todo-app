@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import {GetTasks, AddTask, DeleteTask, Greet, UpdateTaskStatus, UpdateTaskPriority} from '../../wailsjs/go/main/App';
-import {createEmptyTask, Task} from "../types/task";
+import {Greet} from '../../wailsjs/go/main/App';
+import {Task} from "../types/task";
 import {createTask} from "../repositories/task";
+import {createEmptyTask} from "../utils/task";
 
 const props = defineProps<{ username: string }>();
 const emit = defineEmits(["loadTasks"])
-const message = ref('');
 
+const message = ref('');
 const newTask = ref<Task>(createEmptyTask())
 
 const getMessage = async () => {
@@ -35,10 +36,6 @@ onMounted(() => {
     <div>
       <input v-model="newTask.text" placeholder="Введите новую задачу" />
       <input type="datetime-local" v-model="newTask.deadline" />
-      <label>
-        <input type="checkbox" v-model="newTask.hasPriority" />
-        Важная задача
-      </label>
       <span class="star-icon" role="button" @click="newTask.hasPriority = !newTask.hasPriority">
         {{ newTask.hasPriority ? '★' : '☆' }}
       </span>
