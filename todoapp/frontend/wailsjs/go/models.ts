@@ -5,6 +5,7 @@ export namespace main {
 	    text: string;
 	    status: string;
 	    deadline: sql.NullString;
+	    has_priority: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new Task(source);
@@ -16,6 +17,7 @@ export namespace main {
 	        this.text = source["text"];
 	        this.status = source["status"];
 	        this.deadline = this.convertValues(source["deadline"], sql.NullString);
+	        this.has_priority = source["has_priority"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

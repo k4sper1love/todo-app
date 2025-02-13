@@ -46,8 +46,8 @@ func (a *App) Greet(name string) string {
 	return msg.String()
 }
 
-func (a *App) AddTask(text string, deadline *string) {
-	AddTask(text, deadline)
+func (a *App) AddTask(text string, deadline *string, hasPriority bool) {
+	AddTask(text, deadline, hasPriority)
 }
 
 func (a *App) GetTasks() []Task {
@@ -68,4 +68,8 @@ func (a *App) SetUsername(username string) error {
 
 func (a *App) UpdateTaskStatus(id int, status string) error {
 	return UpdateTaskStatus(id, status)
+}
+
+func (a *App) UpdateTaskPriority(id int, hasPriority bool) error {
+	return UpdateTaskPriority(id, hasPriority)
 }

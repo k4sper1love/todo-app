@@ -8,10 +8,11 @@ import (
 )
 
 type Task struct {
-	ID       int            `json:"id"`
-	Text     string         `json:"text"`
-	Status   string         `json:"status"`
-	Deadline sql.NullString `json:"deadline"`
+	ID          int            `json:"id"`
+	Text        string         `json:"text"`
+	Status      string         `json:"status"`
+	Deadline    sql.NullString `json:"deadline"`
+	HasPriority bool           `json:"has_priority"`
 }
 
 var db *sql.DB
@@ -37,7 +38,8 @@ func initDB() {
 	 			id INTEGER PRIMARY KEY,
 				text TEXT NOT NULL,
 				status TEXT CHECK(status IN ('todo', 'in_progress', 'done')) NOT NULL DEFAULT 'todo',
-                deadline TEXT          
+                deadline TEXT,
+                has_priority boolean NOT NULL DEFAULT false
 	);`)
 	if err != nil {
 		log.Fatal(err)
@@ -46,8 +48,8 @@ func initDB() {
 	fmt.Println("База данных инициализирована")
 }
 
-func AddTask(text string, deadline *string) {
-	_, err := db.Exec("INSERT INTO tasks (text, status, deadline) VALUES(?, 'todo', ?)", text, deadline)
+func AddTask(text string, deadline *string, hasPriority bool) {
+	_, err := db.Exec("INSERT INTO tasks (text, status, deadline, has_priority) VALUES(?, 'todo', ?, ?)", text, deadline, hasPriority)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,7 +65,7 @@ func GetTasks() []Task {
 	var tasks []Task
 	for rows.Next() {
 		var task Task
-		rows.Scan(&task.ID, &task.Text, &task.Status, &task.Deadline)
+		rows.Scan(&task.ID, &task.Text, &task.Status, &task.Deadline, &task.HasPriority)
 		tasks = append(tasks, task)
 	}
 
@@ -95,5 +97,10 @@ func SetUsername(username string) error {
 
 func UpdateTaskStatus(id int, status string) error {
 	_, err := db.Exec(`UPDATE tasks SET status = ? WHERE id = ?`, status, id)
+	return err
+}
+
+func UpdateTaskPriority(id int, hasPriority bool) error {
+	_, err := db.Exec(`UPDATE tasks SET has_priority = ? WHERE id = ?`, hasPriority, id)
 	return err
 }
