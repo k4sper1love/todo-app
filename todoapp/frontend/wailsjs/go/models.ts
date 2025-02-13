@@ -1,4 +1,4 @@
-export namespace main {
+export namespace repository {
 	
 	export class Task {
 	    id: number;
