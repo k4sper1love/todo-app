@@ -10,6 +10,8 @@ export interface Task {
     id: number;
     text: string;
     status: TaskStatus;
-    deadline?: string;
     hasPriority: boolean;
+    createdAt?: string,
+    dueAt?: string,
+    completedAt?: string
 }

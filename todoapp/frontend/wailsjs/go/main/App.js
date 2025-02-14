@@ -10,8 +10,12 @@ export function DeleteTask(arg1) {
   return window['go']['main']['App']['DeleteTask'](arg1);
 }
 
-export function GetTasks() {
-  return window['go']['main']['App']['GetTasks']();
+export function GetActiveTasks() {
+  return window['go']['main']['App']['GetActiveTasks']();
+}
+
+export function GetCompletedTasks() {
+  return window['go']['main']['App']['GetCompletedTasks']();
 }
 
 export function GetUsername() {
@@ -24,6 +28,10 @@ export function Greet(arg1) {
 
 export function SetUsername(arg1) {
   return window['go']['main']['App']['SetUsername'](arg1);
+}
+
+export function UpdateTask(arg1, arg2, arg3) {
+  return window['go']['main']['App']['UpdateTask'](arg1, arg2, arg3);
 }
 
 export function UpdateTaskPriority(arg1, arg2) {

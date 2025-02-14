@@ -6,11 +6,12 @@
     --secondary-text-color: #a0a0a0;
     --background-color: #121212;
     --border-color: #333333;
+    --success-color: #00c67c;
 }
 
 
 html {
-    background: linear-gradient(135deg, #121212, #1e1e1e);
+    background: var(--background-color);
     text-align: center;
     color:  var(--text-color);
 }

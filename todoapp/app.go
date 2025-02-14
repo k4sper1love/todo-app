@@ -53,12 +53,16 @@ func (a *App) AddTask(text string, deadline *string, hasPriority bool) error {
 	return a.taskRepo.AddTask(text, deadline, hasPriority)
 }
 
-func (a *App) GetTasks() ([]repository.Task, error) {
-	return a.taskRepo.GetTasks()
+func (a *App) GetActiveTasks() ([]repository.Task, error) {
+	return a.taskRepo.GetActiveTasks()
 }
 
-func (a *App) DeleteTask(id int) error {
-	return a.taskRepo.DeleteTask(id)
+func (a *App) GetCompletedTasks() ([]repository.Task, error) {
+	return a.taskRepo.GetCompletedTasks()
+}
+
+func (a *App) UpdateTask(id int, text string, dueAt *string) error {
+	return a.taskRepo.UpdateTask(id, text, dueAt)
 }
 
 func (a *App) UpdateTaskStatus(id int, status string) error {
@@ -67,6 +71,10 @@ func (a *App) UpdateTaskStatus(id int, status string) error {
 
 func (a *App) UpdateTaskPriority(id int, hasPriority bool) error {
 	return a.taskRepo.UpdateTaskPriority(id, hasPriority)
+}
+
+func (a *App) DeleteTask(id int) error {
+	return a.taskRepo.DeleteTask(id)
 }
 
 func (a *App) GetUsername() (string, error) {

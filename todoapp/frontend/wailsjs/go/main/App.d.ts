@@ -6,13 +6,17 @@ export function AddTask(arg1:string,arg2:any,arg3:boolean):Promise<void>;
 
 export function DeleteTask(arg1:number):Promise<void>;
 
-export function GetTasks():Promise<Array<repository.Task>>;
+export function GetActiveTasks():Promise<Array<repository.Task>>;
+
+export function GetCompletedTasks():Promise<Array<repository.Task>>;
 
 export function GetUsername():Promise<string>;
 
 export function Greet(arg1:string):Promise<string>;
 
 export function SetUsername(arg1:string):Promise<void>;
+
+export function UpdateTask(arg1:number,arg2:string,arg3:any):Promise<void>;
 
 export function UpdateTaskPriority(arg1:number,arg2:boolean):Promise<void>;
 

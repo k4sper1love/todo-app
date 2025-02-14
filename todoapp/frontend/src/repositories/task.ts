@@ -1,36 +1,42 @@
-import {AddTask, DeleteTask, GetTasks, UpdateTaskPriority, UpdateTaskStatus} from "../../wailsjs/go/main/App";
-import {Task, TaskStatus, TaskStatusEnum} from "../types/task";
+import {
+    AddTask,
+    DeleteTask,
+    GetActiveTasks,
+    GetCompletedTasks,
+    UpdateTaskPriority,
+    UpdateTaskStatus,
+    UpdateTask
+} from "../../wailsjs/go/main/App";
+import {Task, TaskStatus} from "../types/task";
+import {mapTask} from "../utils/task";
 
-export const fetchTasks = async (): Promise<Task[]> => {
+const fetchTasks = async (fetchMethod: () => Promise<any[]>): Promise<Task[]> => {
     try {
-    const data = await GetTasks();
-    return data.map((task): Task => ({
-        ...task,
-        deadline: task.deadline?.Valid ? task.deadline.String : undefined,
-        hasPriority: task.has_priority,
-        status: (Object.values(TaskStatusEnum) as string[]).includes(task.status)
-            ? (task.status as TaskStatus)
-            : TaskStatusEnum.TODO
-    }));
+        const data = await fetchMethod();
+        return data.map(mapTask);
     } catch (error) {
-        console.error("Failed to fetch tasks:", error)
-        return []
+        console.error("Failed to fetch tasks:", error);
+        return [];
     }
 };
 
+export const fetchActiveTasks = () => fetchTasks(GetActiveTasks)
+
+export const fetchCompletedTasks = () => fetchTasks(GetCompletedTasks)
+
 export const createTask = async (task: Task) => {
     try {
-        await AddTask(task.text, task.deadline, task.hasPriority)
+        await AddTask(task.text, task.dueAt, task.hasPriority)
     } catch (error) {
         console.error("Failed to create task:", error)
     }
 }
 
-export const deleteTask = async (id: number) => {
+export const updateTask = async(task: Task) => {
     try {
-        await DeleteTask(id)
+        await UpdateTask(task.id, task.text, task.dueAt)
     } catch (error) {
-        console.error("Failed to delete task:", error)
+        console.error("Failed to update task:", error)
     }
 }
 
@@ -47,5 +53,14 @@ export const updateTaskPriority = async (id: number, hasPriority: boolean) => {
         await UpdateTaskPriority(id, hasPriority)
     } catch (error) {
         console.error("Failed to update task priority:", error)
+    }
+}
+
+
+export const deleteTask = async (id: number) => {
+    try {
+        await DeleteTask(id)
+    } catch (error) {
+        console.error("Failed to delete task:", error)
     }
 }

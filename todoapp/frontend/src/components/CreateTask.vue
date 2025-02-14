@@ -33,7 +33,7 @@ const openDateTimePicker = () => {
       <input class="w-25" v-model="newTask.text" placeholder="Введите новую задачу"/>
       <div class="input-group-text">
         <span class="me-2 calendar-icon" @click="openDateTimePicker">📅</span>
-        <input v-model="newTask.deadline" id="taskDeadline" type="datetime-local" placeholder="Выберите дату и время">
+        <input v-model="newTask.dueAt" id="taskDeadline" type="datetime-local" placeholder="Выберите дату и время">
       </div>
       <button class="btn btn-outline-primary" type="button" @click="addTask">Добавить задачу</button>
     </div>

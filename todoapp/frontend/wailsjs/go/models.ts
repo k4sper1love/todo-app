@@ -4,8 +4,10 @@ export namespace repository {
 	    id: number;
 	    text: string;
 	    status: string;
-	    deadline: sql.NullString;
 	    has_priority: boolean;
+	    created_at: sql.NullString;
+	    due_at: sql.NullString;
+	    completed_at: sql.NullString;
 	
 	    static createFrom(source: any = {}) {
 	        return new Task(source);
@@ -16,8 +18,10 @@ export namespace repository {
 	        this.id = source["id"];
 	        this.text = source["text"];
 	        this.status = source["status"];
-	        this.deadline = this.convertValues(source["deadline"], sql.NullString);
 	        this.has_priority = source["has_priority"];
+	        this.created_at = this.convertValues(source["created_at"], sql.NullString);
+	        this.due_at = this.convertValues(source["due_at"], sql.NullString);
+	        this.completed_at = this.convertValues(source["completed_at"], sql.NullString);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
