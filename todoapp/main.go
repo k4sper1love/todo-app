@@ -15,21 +15,23 @@ import (
 var assets embed.FS
 
 func main() {
+	// Open a connection to the SQLite database.
 	db, err := sql.Open("sqlite", "./tasks.db")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to open database conn: %v", err)
 	}
 
+	// Create a new repository instance.
 	repo := repository.NewSQLiteRepository(db)
 	if err = repo.InitDB(); err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to initialize database: %v", err)
 	}
 
-	// Create an instance of the app structure
+	// Create an instance of the app structure.
 	app := NewApp(repo, repo)
 
 	// Create application with options
-	err = wails.Run(&options.App{
+	if err = wails.Run(&options.App{
 		Title:  "todoapp",
 		Width:  1024,
 		Height: 768,
@@ -41,9 +43,7 @@ func main() {
 		Bind: []interface{}{
 			app,
 		},
-	})
-
-	if err != nil {
-		log.Fatal("Error:", err.Error())
+	}); err != nil {
+		log.Fatalf("Application terminated with an error: %v", err)
 	}
 }

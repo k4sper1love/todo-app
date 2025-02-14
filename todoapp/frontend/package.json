@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "flatpickr": "^4.6.13",
+    "bootstrap": "^5.3.3",
     "vue": "^3.2.37"
   },
   "devDependencies": {

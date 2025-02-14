@@ -1,5 +1,6 @@
 import {Task, TaskStatus, TaskStatusEnum} from "../types/task";
 
+// Creates an empty task template
 export const createEmptyTask = (): Task => ({
     id: -1,
     text: "",
@@ -8,6 +9,7 @@ export const createEmptyTask = (): Task => ({
     hasPriority: false,
 });
 
+// Maps raw API response to Task type
 export const mapTask = (task: any): Task => ({
     ...task,
     status: (Object.values(TaskStatusEnum) as string[]).includes(task.status)

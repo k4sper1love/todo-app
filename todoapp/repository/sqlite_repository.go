@@ -4,14 +4,17 @@ import (
 	"database/sql"
 )
 
+// SQLiteRepository is a repository implementation using SQLite as the database.
 type SQLiteRepository struct {
 	db *sql.DB
 }
 
+// NewSQLiteRepository creates a new instance of SQLiteRepository.
 func NewSQLiteRepository(db *sql.DB) *SQLiteRepository {
 	return &SQLiteRepository{db: db}
 }
 
+// InitDB initializes the database schema, creating necessary tables if they don't exist.
 func (r *SQLiteRepository) InitDB() error {
 	_, err := r.db.Exec(
 		`CREATE TABLE IF NOT EXISTS users (
@@ -36,6 +39,7 @@ func (r *SQLiteRepository) InitDB() error {
 	return nil
 }
 
+// AddTask inserts a new task into the database.
 func (r *SQLiteRepository) AddTask(text string, deadline *string, hasPriority bool) error {
 	_, err := r.db.Exec(""+
 		"INSERT INTO tasks (text, status, due_at, has_priority) "+
@@ -43,6 +47,7 @@ func (r *SQLiteRepository) AddTask(text string, deadline *string, hasPriority bo
 	return err
 }
 
+// GetActiveTasks retrieves all tasks that are not marked as "done".
 func (r *SQLiteRepository) GetActiveTasks() ([]Task, error) {
 	rows, err := r.db.Query(`
 		SELECT * FROM tasks WHERE status IN ('todo', 'in_progress')
@@ -62,6 +67,7 @@ func (r *SQLiteRepository) GetActiveTasks() ([]Task, error) {
 	return scanTasks(rows)
 }
 
+// GetCompletedTasks retrieves all completed tasks, ordered by completion date.
 func (r *SQLiteRepository) GetCompletedTasks() ([]Task, error) {
 	rows, err := r.db.Query(`
 		SELECT * FROM tasks WHERE status = 'done'
@@ -74,11 +80,13 @@ func (r *SQLiteRepository) GetCompletedTasks() ([]Task, error) {
 	return scanTasks(rows)
 }
 
+// UpdateTask updates the text and due date of a specific task.
 func (r *SQLiteRepository) UpdateTask(id int, text string, dueAt *string) error {
 	_, err := r.db.Exec(`UPDATE tasks SET text = ?, due_at = ? WHERE id = ?`, text, dueAt, id)
 	return err
 }
 
+// UpdateTaskStatus updates the status of a task and sets the completed_at timestamp if necessary.
 func (r *SQLiteRepository) UpdateTaskStatus(id int, status string) error {
 	_, err := r.db.Exec(`
 			UPDATE tasks 
@@ -93,17 +101,26 @@ func (r *SQLiteRepository) UpdateTaskStatus(id int, status string) error {
 	return err
 }
 
+// UpdateTaskPriority updates the priority flag of a specific task.
 func (r *SQLiteRepository) UpdateTaskPriority(id int, hasPriority bool) error {
 	_, err := r.db.Exec(`UPDATE tasks SET has_priority = ? WHERE id = ?`, hasPriority, id)
 	return err
 }
 
+// DeleteTask removes a task from the database by its ID.
+func (r *SQLiteRepository) DeleteTask(id int) error {
+	_, err := r.db.Exec("DELETE FROM tasks WHERE id = ?", id)
+	return err
+}
+
+// GetUsername retrieves the stored username from the users table.
 func (r *SQLiteRepository) GetUsername() (string, error) {
 	var username string
 	err := r.db.QueryRow("SELECT username FROM users WHERE id = 1").Scan(&username)
 	return username, err
 }
 
+// SetUsername inserts or updates the username in the database.
 func (r *SQLiteRepository) SetUsername(username string) error {
 	_, err := r.db.Exec(`
 		INSERT INTO users (id, username) VALUES (1, ?)
@@ -111,6 +128,7 @@ func (r *SQLiteRepository) SetUsername(username string) error {
 	return err
 }
 
+// scanTasks scans rows into a slice of Task structs.
 func scanTasks(rows *sql.Rows) ([]Task, error) {
 	var tasks []Task
 	for rows.Next() {
@@ -122,9 +140,4 @@ func scanTasks(rows *sql.Rows) ([]Task, error) {
 		tasks = append(tasks, task)
 	}
 	return tasks, nil
-}
-
-func (r *SQLiteRepository) DeleteTask(id int) error {
-	_, err := r.db.Exec("DELETE FROM tasks WHERE id = ?", id)
-	return err
 }
