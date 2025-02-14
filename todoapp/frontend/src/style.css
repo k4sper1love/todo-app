@@ -68,15 +68,22 @@ body .btn-outline-primary {
 
 body .btn-outline-primary:hover {
     background-color: rgba(187, 134, 252, 0.2);
-    color:var(--primary-color);
+    color: var(--primary-color);
     border-color: var(--primary-color);
 }
 
 body .btn-outline-primary:active {
-    background-color: rgba(187, 134, 252, 0.4);
-    color: var(--primary-color);
-    border-color: var(--primary-color);
-    transform: scale(0.98);
+    background-color: rgba(187, 134, 252, 0.4) !important;
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    transform: scale(0.98) !important;
+    box-shadow: none !important;
+}
+
+body .btn-outline-primary:focus,
+body .btn-outline-primary:focus-visible {
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 body .btn-outline-danger {
