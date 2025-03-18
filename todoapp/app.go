@@ -10,16 +10,16 @@ import (
 
 // App struct represents the main application logic.
 type App struct {
-	ctx      context.Context
-	taskRepo repository.TaskRepository
-	userRepo repository.UserRepository
+	ctx         context.Context
+	taskRepo    repository.TaskRepository
+	profileRepo repository.ProfileRepository
 }
 
 // NewApp creates a new instance of the App.
-func NewApp(taskRepo repository.TaskRepository, userRepo repository.UserRepository) *App {
+func NewApp(taskRepo repository.TaskRepository, profileRepo repository.ProfileRepository) *App {
 	return &App{
-		taskRepo: taskRepo,
-		userRepo: userRepo,
+		taskRepo:    taskRepo,
+		profileRepo: profileRepo,
 	}
 }
 
@@ -51,18 +51,18 @@ func (a *App) Greet(name string) string {
 }
 
 // AddTask adds a new task with an optional deadline and priority flag.
-func (a *App) AddTask(text string, deadline *string, hasPriority bool) error {
-	return a.taskRepo.AddTask(text, deadline, hasPriority)
+func (a *App) AddTask(profileID int, text string, deadline *string, hasPriority bool) error {
+	return a.taskRepo.AddTask(profileID, text, deadline, hasPriority)
 }
 
 // GetActiveTasks retrieves a list of all active (incomplete) tasks.
-func (a *App) GetActiveTasks() ([]repository.Task, error) {
-	return a.taskRepo.GetActiveTasks()
+func (a *App) GetActiveTasks(profileID int) ([]repository.Task, error) {
+	return a.taskRepo.GetActiveTasks(profileID)
 }
 
 // GetCompletedTasks retrieves a list of all completed tasks.
-func (a *App) GetCompletedTasks() ([]repository.Task, error) {
-	return a.taskRepo.GetCompletedTasks()
+func (a *App) GetCompletedTasks(profileID int) ([]repository.Task, error) {
+	return a.taskRepo.GetCompletedTasks(profileID)
 }
 
 // UpdateTask modifies the text and/or due date of an existing task.
@@ -85,12 +85,22 @@ func (a *App) DeleteTask(id int) error {
 	return a.taskRepo.DeleteTask(id)
 }
 
-// GetUsername retrieves the stored username.
-func (a *App) GetUsername() (string, error) {
-	return a.userRepo.GetUsername()
+func (a *App) AddProfile(name string) (int, error) {
+	return a.profileRepo.AddProfile(name)
 }
 
-// SetUsername updates the stored username.
-func (a *App) SetUsername(username string) error {
-	return a.userRepo.SetUsername(username)
+func (a *App) GetProfile(id int) (repository.Profile, error) {
+	return a.profileRepo.GetProfile(id)
+}
+
+func (a *App) GetProfiles() ([]repository.Profile, error) {
+	return a.profileRepo.GetProfiles()
+}
+
+func (a *App) UpdateProfile(id int, name string) error {
+	return a.profileRepo.UpdateProfile(id, name)
+}
+
+func (a *App) DeleteProfile(id int) error {
+	return a.profileRepo.DeleteProfile(id)
 }

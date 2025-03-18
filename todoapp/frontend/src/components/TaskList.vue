@@ -4,7 +4,9 @@ import { Task, TaskStatusEnum } from "../types/task";
 import {deleteTask, updateTaskPriority, updateTaskStatus, updateTask,} from "../services/task";
 
 // Define props for task list
-const props = defineProps<{ tasks: Task[] }>();
+const props = defineProps<{
+  tasks: Task[],
+}>();
 
 // Define emitted events
 const emit = defineEmits(["loadTasks"]);

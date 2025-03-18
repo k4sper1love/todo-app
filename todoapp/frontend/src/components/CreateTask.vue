@@ -4,6 +4,10 @@ import {Task} from "../types/task";
 import {createTask} from "../services/task";
 import {createEmptyTask} from "../utils/task";
 
+const props = defineProps<{
+  profileId: number,
+}>();
+
 // Define emitted events
 const emit = defineEmits(["loadTasks"]);
 
@@ -14,7 +18,7 @@ const newTask = ref<Task>(createEmptyTask());
 const addTask = async () => {
   if (!newTask.value.text.trim()) return; // Prevent empty tasks
 
-  await createTask(newTask.value);
+  await createTask(props.profileId, newTask.value);
   newTask.value = createEmptyTask();
   emit("loadTasks");
 };

@@ -11,6 +11,7 @@ export type TaskStatus = (typeof TaskStatusEnum)[keyof typeof TaskStatusEnum];
 // Interface for a Task object
 export interface Task {
     id: number; // Unique identifier
+    profileID: number;
     text: string; // Task description
     status: TaskStatus; // Current task status
     hasPriority: boolean; // Indicates if the task has high priority

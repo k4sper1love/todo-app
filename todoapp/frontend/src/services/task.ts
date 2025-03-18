@@ -13,9 +13,9 @@ import {Task, TaskStatus} from "../types/task";
 import {mapTask} from "../utils/task";
 
 // Fetch tasks with error handling
-const fetchTasks = async (fetchMethod: () => Promise<any[]>): Promise<Task[]> => {
+const fetchTasks = async (profileId: number, fetchMethod: (profileId: number) => Promise<any[]>): Promise<Task[]> => {
     try {
-        const data = await fetchMethod();
+        const data = await fetchMethod(profileId);
         return data.map(mapTask);
     } catch (error) {
         console.error("Failed to fetch tasks:", error);
@@ -23,13 +23,13 @@ const fetchTasks = async (fetchMethod: () => Promise<any[]>): Promise<Task[]> =>
     }
 };
 
-export const fetchActiveTasks = () => fetchTasks(GetActiveTasks)
-export const fetchCompletedTasks = () => fetchTasks(GetCompletedTasks)
+export const fetchActiveTasks = (profileId: number) => fetchTasks(profileId, GetActiveTasks)
+export const fetchCompletedTasks = (profileId: number) => fetchTasks(profileId, GetCompletedTasks)
 
 // Create a new task
-export const createTask = async (task: Task) => {
+export const createTask = async (profile_id: number, task: Task) => {
     try {
-        await AddTask(task.text, task.dueAt, task.hasPriority);
+        await AddTask(profile_id, task.text, task.dueAt, task.hasPriority);
     } catch (error) {
         console.error("Failed to create task:", error);
     }

@@ -4,16 +4,18 @@ import {Greet} from "../../wailsjs/go/main/App";
 
 // Define props for username and current time
 const props = defineProps<{
-  username: string,
+  name: string,
   currentTime: string,
 }>();
+
+const emit = defineEmits(["logout"])
 
 // Reactive variable to store the greeting message
 const message = ref('');
 
 // Fetch greeting message based on username
 const getMessage = async () => {
-  message.value = await Greet(props.username);
+  message.value = await Greet(props.name);
 };
 
 // Fetch the message when component is mounted
@@ -28,6 +30,9 @@ onMounted(() => {
     <p class="fw-lighter fs-2 mt-4">{{ message }}</p>
     <!-- Display the current time -->
     <p class="fw-lighter fs-5">🕓 {{ currentTime }}</p>
+  </div>
+  <div class="accordion-button" @click="emit('logout')">
+    exit
   </div>
 </template>
 

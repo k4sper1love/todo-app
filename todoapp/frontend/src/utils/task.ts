@@ -3,6 +3,7 @@ import {Task, TaskStatus, TaskStatusEnum} from "../types/task";
 // Creates an empty task template
 export const createEmptyTask = (): Task => ({
     id: -1,
+    profileID: -1,
     text: "",
     status: "todo",
     dueAt: undefined,
